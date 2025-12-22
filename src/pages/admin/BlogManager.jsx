@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { getBlogs, saveBlog, deleteBlog, getBlogCategories, addBlogCategory, deleteBlogCategory } from '../../db/queries';
+import { getLocalAsset } from '../../utils';
 import { Plus, Edit, Trash2, Tag } from 'lucide-react';
 import ImageUpload from '../../components/admin/ImageUpload';
+import RichTextEditor from '../../components/admin/RichTextEditor';
 
 export default function BlogManager() {
     const [activeTab, setActiveTab] = useState('posts'); // 'posts' or 'categories'
@@ -128,16 +130,25 @@ export default function BlogManager() {
                                         <tr>
                                             <th className="p-4">Title</th>
                                             <th className="p-4">Category</th>
-                                            <th className="p-4">Date</th>
+                                            <th className="p-4">Published</th>
                                             <th className="p-4">Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {posts.map(p => (
                                             <tr key={p.id} className="border-t hover:bg-gray-50">
-                                                <td className="p-4 font-medium">{p.title}</td>
+                                                <td className="p-4 font-medium flex items-center gap-3">
+                                                    {p.featuredImage ? (
+                                                        <img src={getLocalAsset(p.featuredImage)} className="w-10 h-10 rounded object-cover" alt="" />
+                                                    ) : (
+                                                        <div className="w-10 h-10 rounded bg-gray-200 flex items-center justify-center text-xs text-gray-500">No Img</div>
+                                                    )}
+                                                    {p.title}
+                                                </td>
                                                 <td className="p-4"><span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">{p.category || 'Uncategorized'}</span></td>
-                                                <td className="p-4 text-gray-500 text-sm">{p.date}</td>
+                                                <td className="p-4 text-gray-500 text-sm">
+                                                    {p.publishedAt ? new Date(p.publishedAt).toLocaleDateString() : 'Draft'}
+                                                </td>
                                                 <td className="p-4 flex space-x-2">
                                                     <button onClick={() => { setCurrentPost(p); setIsEditing(true); }} className="text-blue-600 hover:text-blue-800"><Edit size={18} /></button>
                                                     <button onClick={() => handleDeletePost(p.id)} className="text-red-600 hover:text-red-800"><Trash2 size={18} /></button>
@@ -161,7 +172,7 @@ function PostForm({ initialData, categories, onSave, onCancel }) {
         slug: '',
         content: '',
         category: categories[0] || 'Uncategorized',
-        featured_image: ''
+        featuredImage: ''
     });
 
     const handleChange = (e) => {
@@ -183,20 +194,20 @@ function PostForm({ initialData, categories, onSave, onCancel }) {
                 <div className="md:col-span-2">
                     <ImageUpload
                         label="Featured Image"
-                        currentImage={formData.featured_image}
-                        onUpload={(url) => setFormData(prev => ({ ...prev, featured_image: url }))}
+                        currentImage={formData.featuredImage}
+                        onUpload={(url) => setFormData(prev => ({ ...prev, featuredImage: url }))}
                     />
                 </div>
             </div>
 
-            <div className="mb-6">
-                <label className="block text-sm font-medium text-gray-700 mb-1">Content (HTML)</label>
-                <textarea
-                    name="content"
-                    value={formData.content}
-                    onChange={handleChange}
-                    className="w-full h-64 p-2 border rounded font-mono text-sm"
-                ></textarea>
+            <div className="mb-8">
+                <label className="block text-sm font-medium text-gray-700 mb-2">Content</label>
+                <div className="h-80">
+                    <RichTextEditor
+                        value={formData.content}
+                        onChange={(content) => setFormData({ ...formData, content })}
+                    />
+                </div>
             </div>
 
             <div className="flex justify-end space-x-4">

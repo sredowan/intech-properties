@@ -1,7 +1,8 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
 
-// Firebase configuration - only used for Authentication
+// Firebase configuration
 const firebaseConfig = {
     apiKey: "AIzaSyC5RvvhbAAzXLWK8f1EHl6Ztj7W_W-XF3w",
     authDomain: "intech-properties.firebaseapp.com",
@@ -13,6 +14,10 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
-// Only export Auth - Firestore has been migrated to Neon PostgreSQL
+// Export Auth for admin login
 export const auth = getAuth(app);
+
+// Export Firestore for data migration (read-only, will be removed after migration)
+export const db = getFirestore(app);
+
 export default app;

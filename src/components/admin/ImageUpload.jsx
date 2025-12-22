@@ -6,7 +6,7 @@ import { Upload, Loader, Check, XCircle } from 'lucide-react';
 // Development: Use local Node.js server
 // Production: Use PHP script on Hostinger
 const UPLOAD_API = import.meta.env.DEV
-    ? 'http://localhost:3002/api/upload'
+    ? 'http://127.0.0.1:3002/api/upload'
     : '/upload.php';
 
 const ImageUpload = ({ onUpload, currentImage, label = "Upload Image" }) => {

@@ -123,27 +123,32 @@ export async function initializeDatabase() {
 // ============================================
 
 export async function getProperties() {
-    const result = await sql`
-        SELECT * FROM properties ORDER BY sort_order ASC, created_at DESC
-    `;
-    return result.map(row => ({
-        id: row.id,
-        title: row.title,
-        slug: row.slug,
-        location: row.location,
-        area: row.area,
-        areaUnit: row.area_unit,
-        price: row.price,
-        priceLabel: row.price_label,
-        bedrooms: row.bedrooms,
-        bathrooms: row.bathrooms,
-        status: row.status,
-        features: row.features || [],
-        images: row.images || [],
-        floorPlans: row.floor_plans || [],
-        description: row.description,
-        order: row.sort_order
-    }));
+    try {
+        const result = await sql`
+            SELECT * FROM properties ORDER BY sort_order ASC, created_at DESC
+        `;
+        return result.map(row => ({
+            id: row.id,
+            title: row.title,
+            slug: row.slug,
+            location: row.location,
+            area: row.area,
+            areaUnit: row.area_unit,
+            price: row.price,
+            priceLabel: row.price_label,
+            bedrooms: row.bedrooms,
+            bathrooms: row.bathrooms,
+            status: row.status,
+            features: row.features || [],
+            images: row.images || [],
+            floorPlans: row.floor_plans || [],
+            description: row.description,
+            order: row.sort_order
+        }));
+    } catch (error) {
+        console.error('Error fetching properties:', error);
+        return [];
+    }
 }
 
 export async function getPropertyBySlug(slug) {
@@ -216,7 +221,9 @@ export async function saveProperty(property) {
 }
 
 export async function deleteProperty(id) {
+    console.log('[DB] Deleting property with ID:', id);
     await sql`DELETE FROM properties WHERE id = ${id}`;
+    console.log('[DB] Property deleted successfully');
 }
 
 // ============================================
@@ -224,19 +231,27 @@ export async function deleteProperty(id) {
 // ============================================
 
 export async function getBlogs() {
-    const result = await sql`
-        SELECT * FROM blogs ORDER BY published_at DESC
-    `;
-    return result.map(row => ({
-        id: row.id,
-        title: row.title,
-        slug: row.slug,
-        category: row.category,
-        featuredImage: row.featured_image,
-        excerpt: row.excerpt,
-        content: row.content,
-        publishedAt: row.published_at
-    }));
+    try {
+        const result = await sql`
+            SELECT id, title, slug, category, featured_image, excerpt, published_at 
+            FROM blogs 
+            ORDER BY published_at DESC
+        `;
+        return result.map(row => ({
+            id: row.id,
+            title: row.title,
+            slug: row.slug,
+            category: row.category,
+            featuredImage: row.featured_image,
+            excerpt: row.excerpt,
+            // Content is not fetched for list view to improve performance
+            content: '',
+            publishedAt: row.published_at
+        }));
+    } catch (error) {
+        console.error('Error fetching blogs:', error);
+        return [];
+    }
 }
 
 export async function getBlogBySlug(slug) {
@@ -292,8 +307,13 @@ export async function deleteBlog(id) {
 // ============================================
 
 export async function getBlogCategories() {
-    const result = await sql`SELECT * FROM blog_categories ORDER BY name`;
-    return result.map(row => row.name);
+    try {
+        const result = await sql`SELECT * FROM blog_categories ORDER BY name`;
+        return result.map(row => row.name);
+    } catch (error) {
+        console.error('Error fetching blog categories:', error);
+        return [];
+    }
 }
 
 export async function addBlogCategory(name) {
@@ -313,15 +333,20 @@ export async function deleteBlogCategory(name) {
 // ============================================
 
 export async function getGallery() {
-    const result = await sql`
-        SELECT * FROM gallery ORDER BY sort_order ASC, created_at DESC
-    `;
-    return result.map(row => ({
-        id: row.id,
-        category: row.category,
-        imageUrl: row.image_url,
-        order: row.sort_order
-    }));
+    try {
+        const result = await sql`
+            SELECT * FROM gallery ORDER BY sort_order ASC, created_at DESC
+        `;
+        return result.map(row => ({
+            id: row.id,
+            category: row.category,
+            imageUrl: row.image_url,
+            order: row.sort_order
+        }));
+    } catch (error) {
+        console.error('Error fetching gallery:', error);
+        return [];
+    }
 }
 
 export async function addGalleryItem(item) {
@@ -342,15 +367,20 @@ export async function deleteGalleryItem(id) {
 // ============================================
 
 export async function getTestimonials() {
-    const result = await sql`
-        SELECT * FROM testimonials ORDER BY created_at DESC
-    `;
-    return result.map(row => ({
-        id: row.id,
-        name: row.name,
-        text: row.text,
-        createdAt: row.created_at
-    }));
+    try {
+        const result = await sql`
+            SELECT * FROM testimonials ORDER BY created_at DESC
+        `;
+        return result.map(row => ({
+            id: row.id,
+            name: row.name,
+            text: row.text,
+            createdAt: row.created_at
+        }));
+    } catch (error) {
+        console.error('Error fetching testimonials:', error);
+        return [];
+    }
 }
 
 export async function addTestimonial(testimonial) {
@@ -371,19 +401,24 @@ export async function deleteTestimonial(id) {
 // ============================================
 
 export async function getHeroSlides() {
-    const result = await sql`
-        SELECT * FROM hero_slides ORDER BY sort_order ASC
-    `;
-    return result.map(row => ({
-        id: row.id,
-        image: row.image,
-        title: row.title,
-        subtitle: row.subtitle,
-        buttonText: row.button_text,
-        buttonLink: row.button_link,
-        isActive: row.is_active,
-        order: row.sort_order
-    }));
+    try {
+        const result = await sql`
+            SELECT * FROM hero_slides ORDER BY sort_order ASC
+        `;
+        return result.map(row => ({
+            id: row.id,
+            image: row.image,
+            title: row.title,
+            subtitle: row.subtitle,
+            buttonText: row.button_text,
+            buttonLink: row.button_link,
+            isActive: row.is_active,
+            order: row.sort_order
+        }));
+    } catch (error) {
+        console.error('Error fetching hero slides:', error);
+        return [];
+    }
 }
 
 export async function saveHeroSlide(slide) {
@@ -421,11 +456,16 @@ export async function deleteHeroSlide(id) {
 // ============================================
 
 export async function getSettings(key) {
-    const result = await sql`
-        SELECT value FROM settings WHERE key = ${key} LIMIT 1
-    `;
-    if (result.length === 0) return null;
-    return result[0].value;
+    try {
+        const result = await sql`
+            SELECT value FROM settings WHERE key = ${key} LIMIT 1
+        `;
+        if (result.length === 0) return null;
+        return result[0].value;
+    } catch (error) {
+        console.error('Error fetching settings:', error);
+        return null;
+    }
 }
 
 export async function saveSettings(key, value) {

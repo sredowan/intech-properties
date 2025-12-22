@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getProperties, saveProperty, deleteProperty } from '../../db/queries';
+import { getLocalAsset } from '../../utils';
 import { Plus, Edit, Trash2, X } from 'lucide-react';
 import ImageUpload from '../../components/admin/ImageUpload';
 
@@ -97,7 +98,12 @@ export default function PropertiesManager() {
                                 {properties.map(p => (
                                     <tr key={p.id} className="border-t hover:bg-gray-50">
                                         <td className="p-4 font-medium flex items-center gap-3">
-                                            {p.featured_image && <img src={p.featured_image} className="w-10 h-10 rounded object-cover" alt="" />}
+                                            {/* Show first image from the array */}
+                                            {(p.images && p.images.length > 0) ? (
+                                                <img src={getLocalAsset(p.images[0])} className="w-10 h-10 rounded object-cover" alt="" />
+                                            ) : (
+                                                <div className="w-10 h-10 rounded bg-gray-200 flex items-center justify-center text-xs text-gray-500">No Img</div>
+                                            )}
                                             {p.title}
                                         </td>
                                         <td className="p-4">
@@ -137,18 +143,26 @@ function PropertyForm({ initialData, onSave, onCancel }) {
         order: initialData?.order || 0,
         title: initialData?.title || '',
         location: initialData?.location || '',
-        address_house: initialData?.address_house || '',
-        address_road: initialData?.address_road || '',
-        address_area: initialData?.address_area || '',
-        address_city: initialData?.address_city || 'Dhaka',
+        address_house: '', // Not persisted individually
+        address_road: '',
+        address_area: '',
+        address_city: 'Dhaka',
         status: initialData?.status || 'Ongoing',
-        featured_image: initialData?.featured_image || '',
-        images: initialData?.images || [], // Additional slider images
-        at_a_glance: initialData?.at_a_glance || { land_size: '', unit_per_floor: '', building_height: '', road_size: '' },
-        floor_plans: initialData?.floor_plans || [],
+        // Initialize images: 
+        // featured_image gets index 0 (if exists)
+        // images (slider) gets index 1 onwards
+        featured_image: initialData?.images?.[0] || '',
+        images: (initialData?.images?.length > 1) ? initialData.images.slice(1) : [],
+        at_a_glance: initialData?.at_a_glance || {
+            land_size: initialData?.area || '',
+            unit_per_floor: '',
+            building_height: '',
+            road_size: ''
+        },
+        floor_plans: initialData?.floorPlans || initialData?.floor_plans || [], // Handle camelCase vs snake_case
         features: initialData?.features || [],
         video_url: initialData?.video_url || '',
-        content: initialData?.content || '',
+        content: initialData?.description || initialData?.content || '', // Handle description vs content
         slug: initialData?.slug || ''
     });
 
@@ -161,7 +175,8 @@ function PropertyForm({ initialData, onSave, onCancel }) {
             formData.address_city
         ].filter(Boolean);
 
-        if (parts.length > 0 && !initialData) {
+        // Always update location if address parts are being edited
+        if (parts.length > 0) {
             setFormData(prev => ({ ...prev, location: parts.join(', ') }))
         }
     }, [formData.address_house, formData.address_road, formData.address_area, formData.address_city]);
@@ -374,7 +389,20 @@ function PropertyForm({ initialData, onSave, onCancel }) {
 
             <div className="flex justify-end space-x-4">
                 <button onClick={onCancel} className="px-6 py-2 text-gray-600 hover:text-gray-800">Cancel</button>
-                <button onClick={() => onSave(formData)} className="px-6 py-2 bg-primary text-white rounded hover:bg-blue-700">Save Property</button>
+                <button onClick={() => {
+                    // Map form data to DB schema before saving
+                    // MERGE: featured_image + slider images -> images array
+                    const combinedImages = [formData.featured_image, ...formData.images].filter(Boolean);
+
+                    const dataToSave = {
+                        ...formData,
+                        images: combinedImages,
+                        area: formData.at_a_glance?.land_size, // Map land_size to area
+                        description: formData.content, // Map content to description
+                        floorPlans: formData.floor_plans // Map floor_plans to camelCase if needed, or keeping consistency
+                    };
+                    onSave(dataToSave);
+                }} className="px-6 py-2 bg-primary text-white rounded hover:bg-blue-700">Save Property</button>
             </div>
         </div>
     );

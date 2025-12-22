@@ -11,11 +11,9 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = 3002;
 
-// Enable CORS for the Vite dev server
-app.use(cors({
-    origin: ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:5176'],
-    credentials: true
-}));
+// Enable CORS for any localhost port
+// Enable CORS for all
+app.use(cors());
 
 // Serve uploaded images statically
 const uploadsDir = path.join(__dirname, 'public', 'uploads');

@@ -8,6 +8,15 @@ export const getLocalAsset = (url) => {
 
     // Handle uploads
     if (url.includes('/uploads/')) {
+        // If it's already absolute (from new PHP script or DB), return it
+        if (url.startsWith('http')) return url;
+
+        // In development, force load from backend server (valid workaround if proxy isn't restarting)
+        if (import.meta.env.DEV) {
+            const cleanUrl = url.startsWith('/') ? url : `/${url}`;
+            return `http://localhost:3002${cleanUrl}`;
+        }
+
         // If it's already absolute (from new PHP script), return it
         if (url.startsWith('/')) return url;
         // If it's relative?

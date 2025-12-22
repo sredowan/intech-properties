@@ -43,8 +43,34 @@ const PropertyDetails = () => {
         loadProperty();
     }, [id]);
 
-    if (loading) return <div className="py-40 text-center">Loading Property...</div>;
-    if (!property) return <div className="py-40 text-center">Property not found. <Link to="/">Go Home</Link></div>;
+    if (loading) return (
+        <div className="min-h-screen flex items-center justify-center bg-gray-50">
+            <div className="flex flex-col items-center gap-4">
+                <div className="w-12 h-12 border-4 border-secondary border-t-transparent rounded-full animate-spin"></div>
+                <p className="text-gray-500 font-medium animate-pulse">Loading Property Details...</p>
+            </div>
+        </div>
+    );
+
+    if (!property) {
+        console.warn(`Property not found for slug/id: ${id}`);
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-gray-50">
+                <div className="text-center max-w-md p-8 bg-white rounded-2xl shadow-lg border border-gray-100">
+                    <div className="w-16 h-16 bg-red-50 text-red-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <ArrowLeft size={32} />
+                    </div>
+                    <h2 className="text-2xl font-bold text-gray-800 mb-2">Property Not Found</h2>
+                    <p className="text-gray-500 mb-8">
+                        The property you are looking for ({id}) does not exist or has been removed.
+                    </p>
+                    <Link to="/properties" className="inline-flex items-center gap-2 bg-primary text-white px-8 py-3 rounded-full font-bold hover:bg-secondary transition-colors">
+                        Browse All Properties
+                    </Link>
+                </div>
+            </div>
+        );
+    }
 
     // Helper for At A Glance icons
     const getIcon = (key) => {
@@ -88,7 +114,7 @@ const PropertyDetails = () => {
                             <p className="font-bold text-secondary">www.intechproperties.com</p>
                         </div>
                     </div>
-                    <img src={getLocalAsset(property.featured_image)} className="w-full h-64 object-cover mb-8 rounded" alt="Cover" />
+                    <img src={getLocalAsset(property.images?.[0])} className="w-full h-64 object-cover mb-8 rounded" alt="Cover" />
                     <div className="grid grid-cols-2 gap-4 mb-8">
                         <div>
                             <h2 className="font-bold text-lg mb-2">Location</h2>
@@ -168,8 +194,8 @@ const PropertyDetails = () => {
                                     modules={[Autoplay, Pagination, Navigation]}
                                     className="w-full h-full"
                                 >
-                                    {/* Combine featured image and any additional images */}
-                                    {[property.featured_image, ...(property.images || [])].filter(Boolean).map((img, idx) => (
+                                    {/* Property Images from database */}
+                                    {(property.images || []).filter(Boolean).map((img, idx) => (
                                         <SwiperSlide key={idx} className="flex items-center justify-center bg-gray-100">
                                             <img
                                                 src={getLocalAsset(img)}
@@ -209,12 +235,12 @@ const PropertyDetails = () => {
                         </div>
 
                         {/* Integrated Floor Plans & Unite Details */}
-                        {property.floor_plans && property.floor_plans.length > 0 && (
+                        {property.floorPlans && property.floorPlans.length > 0 && (
                             <section className="mb-12 bg-white p-8 rounded-2xl shadow-sm">
                                 <h3 className="text-2xl font-bold text-primary mb-6 border-l-4 border-secondary pl-4">Floor Plans & Configurations</h3>
                                 {/* Horizontal Scrollable Tabs */}
                                 <div className="flex overflow-x-auto pb-4 gap-2 mb-8 no-scrollbar">
-                                    {property.floor_plans.map((plan, i) => (
+                                    {property.floorPlans.map((plan, i) => (
                                         <button
                                             key={i}
                                             onClick={() => setActiveTab(i)}
@@ -230,7 +256,7 @@ const PropertyDetails = () => {
                                 {/* Tab Content */}
                                 <div className="space-y-8 animate-fadeIn">
                                     {/* Render Unit Details ONLY if it's NOT a simple plan (Ground/Typical) AND has details */}
-                                    {!property.floor_plans[activeTab].is_simple_plan && (property.floor_plans[activeTab].fave_plan_size || property.floor_plans[activeTab].details?.size) && (
+                                    {!property.floorPlans[activeTab].is_simple_plan && (property.floorPlans[activeTab].fave_plan_size || property.floorPlans[activeTab].details?.size) && (
                                         <div className="bg-gray-50 rounded-2xl p-6 md:p-8">
                                             <h4 className="text-lg font-bold text-[#001253] mb-6 flex items-center gap-2">
                                                 <span className="w-2 h-2 rounded-full bg-secondary"></span>
@@ -238,16 +264,16 @@ const PropertyDetails = () => {
                                             </h4>
                                             {/* Compatible with both old data structure and new Admin structure */}
                                             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
-                                                <UnitStat label="Size" icon={<Ruler size={20} />} value={property.floor_plans[activeTab].fave_plan_size || property.floor_plans[activeTab].details?.size} unit="sft" />
-                                                <UnitStat label="Bedrooms" icon={<Home size={20} />} value={property.floor_plans[activeTab].fave_plan_rooms || property.floor_plans[activeTab].details?.bed} />
-                                                <UnitStat label="Bathrooms" icon={<Bath size={20} />} value={property.floor_plans[activeTab].fave_plan_bathrooms || property.floor_plans[activeTab].details?.bath} />
-                                                <UnitStat label="Balconies" icon={<DoorOpen size={20} />} value={property.floor_plans[activeTab].details?.balcony || 'N/A'} />
+                                                <UnitStat label="Size" icon={<Ruler size={20} />} value={property.floorPlans[activeTab].fave_plan_size || property.floorPlans[activeTab].details?.size} unit="sft" />
+                                                <UnitStat label="Bedrooms" icon={<Home size={20} />} value={property.floorPlans[activeTab].fave_plan_rooms || property.floorPlans[activeTab].details?.bed} />
+                                                <UnitStat label="Bathrooms" icon={<Bath size={20} />} value={property.floorPlans[activeTab].fave_plan_bathrooms || property.floorPlans[activeTab].details?.bath} />
+                                                <UnitStat label="Balconies" icon={<DoorOpen size={20} />} value={property.floorPlans[activeTab].details?.balcony || 'N/A'} />
                                             </div>
                                         </div>
                                     )}
                                     <div className="bg-white rounded-xl overflow-hidden border-2 border-dashed border-gray-200 min-h-[400px] flex flex-col items-center justify-center p-4 relative group">
                                         <img
-                                            src={getLocalAsset(property.floor_plans[activeTab].fave_plan_image || property.floor_plans[activeTab].image)}
+                                            src={getLocalAsset(property.floorPlans[activeTab].fave_plan_image || property.floorPlans[activeTab].image)}
                                             alt="Floor Plan"
                                             className="max-w-full h-auto max-h-[600px] object-contain transition-transform duration-500 hover:scale-105"
                                         />

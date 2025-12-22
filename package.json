@@ -4,10 +4,10 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "npm run dev:all",
     "dev:host": "vite --host",
     "server": "node server.js",
-    "dev:all": "node server.js & vite",
+    "dev:all": "npx -y concurrently \"node server.js\" \"vite\"",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"
@@ -27,6 +27,7 @@
     "multer": "^2.0.2",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
+    "react-quill-new": "^3.7.0",
     "react-router-dom": "^7.11.0",
     "swiper": "^12.0.3"
   },

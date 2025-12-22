@@ -306,7 +306,7 @@ const Properties = () => {
                                         {/* Image Container - 3:4 Aspect Ratio */}
                                         <div className="relative aspect-[3/4] overflow-hidden bg-gray-50">
                                             <img
-                                                src={getLocalAsset(prop.featured_image)}
+                                                src={getLocalAsset(prop.images?.[0] || prop.featured_image)}
                                                 alt={prop.title}
                                                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-in-out"
                                             />
