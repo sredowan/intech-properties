@@ -28,21 +28,20 @@ This guide will help you deploy your application to Hostinger using GitHub for c
     -   **Application Startup File**: `server.js`.
     -   **npm install**: Click this button after deployment to install dependencies.
 
-## Step 3: Connect GitHub
-1.  **Find the Git Tool**:
-    -   In your website's dashboard (hPanel), look at the **Left Sidebar**.
-    -   Scroll down to the **Advanced** section.
-    -   Click on **Git Production** (or just **Git**).
-2.  **Add a Repository**:
-    -   **Repository**: `sredowan/intech-properties` (Your GitHub repo user/name).
-    -   **Branch**: `main`.
-    -   **Directory**: (Leave empty to deploy to public_html, or match your Node.js settings).
-    -   **Webhook URL**: Copy this URL.
-3.  **Setup Webhook in GitHub**:
-    -   Go to your GitHub Repo -> **Settings** -> **Webhooks**.
-    -   Add a new webhook with the URL from Hostinger.
-    -   Content type: `application/json`.
-    -   Event: `Push`.
+## Step 3: Upload Files (Manual Method)
+Since your plan doesn't have the Git tool, we will upload the files manually.
+
+1.  **Download the Zip**: I have created a file named `deployment.zip` in your project folder.
+2.  **Go to File Manager**:
+    -   In Hostinger Dashboard -> **Files** -> **File Manager**.
+    -   Open `public_html` (or your domain's folder).
+3.  **Upload & Extract**:
+    -   Drag and drop `deployment.zip` into the `public_html` folder.
+    -   Right-click `deployment.zip` and select **Extract**.
+    -   Ensure the files (`server.js`, `package.json`, `dist` folder) are directly in `public_html` (move them if they extracted into a subfolder).
+
+## Step 4: Environment Variables
+1.  In your Hostinger Node.js settings:
 
 ## Step 4: Environment Variables
 1.  In your Hostinger Node.js settings (or `.env` file manager):
