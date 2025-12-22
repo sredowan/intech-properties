@@ -29,7 +29,10 @@ This guide will help you deploy your application to Hostinger using GitHub for c
     -   **npm install**: Click this button after deployment to install dependencies.
 
 ## Step 3: Connect GitHub
-1.  In hPanel, go to **GIT** (under Advanced).
+1.  **Find the Git Tool**:
+    -   In your website's dashboard (hPanel), look at the **Left Sidebar**.
+    -   Scroll down to the **Advanced** section.
+    -   Click on **Git Production** (or just **Git**).
 2.  **Add a Repository**:
     -   **Repository**: `sredowan/intech-properties` (Your GitHub repo user/name).
     -   **Branch**: `main`.
