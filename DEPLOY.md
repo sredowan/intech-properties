@@ -61,7 +61,7 @@ This guide will help you deploy your application to Hostinger using GitHub for c
 4.  **Restart** the Node.js application in hPanel.
 
 ## Troubleshooting
--   **White Screen**: Check if the `dist` folder exists. If not, run `npm run build`.
+-   **White Screen**: Check if the `build` folder exists. If not, run `npm run build`.
 -   **500 Error**: Check the "permissions" of your folders or check `error.log` in File Manager.
 -   **Images not loading**: ensure `public/uploads` has write permissions.
 
