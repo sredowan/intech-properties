@@ -47,22 +47,15 @@ This guide will help you deploy your application to Hostinger using GitHub for c
     -   *Crucial*: Since Vite builds at deployment time, you might need to set this *before* running the build command if code depends on it, OR ensure the runtime variables are read correctly.
     -   If you use an `.env` file on the server, make sure to create it manually in the File Manager since it's ignored by Git.
 
-## Step 5: Build and Run
+## Step 5: Run
 1.  After pulling the code in Hostinger:
 2.  Click **npm install** in the Node.js settings.
-3.  **Run Build Script**:
-    -   You may need to run the build command manually via SSH or a custom script in Hostinger.
-    -   **SSH Command**:
-        ```bash
-        cd domains/yourdomain.com/public_html
-        npm run build
-        ```
-    -   Or add `"postinstall": "npm run build"` to your `package.json` scripts so it runs automatically after install.
-4.  **Restart** the Node.js application in hPanel.
+3.  **Restart** the Node.js application.
+    -   *Note*: We have already pushed the `dist` (build) folder to GitHub, so you DO NOT need to run a "Build" command on the server. The files are already there.
 
 ## Troubleshooting
--   **White Screen**: Check if the `build` folder exists. If not, run `npm run build`.
--   **500 Error**: Check the "permissions" of your folders or check `error.log` in File Manager.
+-   **White Screen**: Check if the `dist` folder exists in the File Manager.
+-   **500 Error**: Check the "permissions" of your folders or check `error.log`.
 -   **Images not loading**: ensure `public/uploads` has write permissions.
 
 ## Database

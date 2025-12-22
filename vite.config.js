@@ -10,8 +10,5 @@ export default defineConfig({
       '/api': 'http://localhost:3002',
       '/uploads': 'http://localhost:3002'
     }
-  },
-  build: {
-    outDir: 'build',
   }
 })
