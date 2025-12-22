@@ -79,7 +79,7 @@ const PropertiesSection = ({ properties }) => {
                                 animate={{ opacity: 1, scale: 1 }}
                                 exit={{ opacity: 0, scale: 0.9 }}
                                 transition={{ duration: 0.3 }}
-                                className="bg-white group rounded-xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-gray-100 flex flex-col h-full"
+                                className="relative bg-white group rounded-xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-gray-100 flex flex-col h-full"
                             >
                                 {/* Image Container - 3:4 Aspect Ratio (Standard Portrait) */}
                                 <div className="relative aspect-[3/4] overflow-hidden bg-gray-50">
