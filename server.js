@@ -9,11 +9,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-const PORT = 3002;
-
-// Enable CORS for any localhost port
-// Enable CORS for all
-app.use(cors());
+const PORT = process.env.PORT || 3002;
 
 // Serve uploaded images statically
 const uploadsDir = path.join(__dirname, 'public', 'uploads');
@@ -21,6 +17,10 @@ if (!fs.existsSync(uploadsDir)) {
     fs.mkdirSync(uploadsDir, { recursive: true });
 }
 app.use('/uploads', express.static(uploadsDir));
+
+// Serve static files from the React app
+app.use(express.static(path.join(__dirname, 'dist')));
+app.use(cors());
 
 // Configure multer for file storage
 const storage = multer.diskStorage({
@@ -66,6 +66,12 @@ app.post('/api/upload', upload.single('image'), (req, res) => {
         url: imageUrl,
         filename: req.file.filename
     });
+});
+
+// The "catchall" handler: for any request that doesn't
+// match one above, send back React's index.html file.
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 
 // Error handling middleware
