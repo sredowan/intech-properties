@@ -1,0 +1,73 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@theme {
+  --font-sans: 'Inter', sans-serif;
+  --font-heading: 'Darker Grotesque', sans-serif;
+
+  --color-primary: #0D47A1;
+  --color-primary-hover: #082e6a;
+
+  --color-secondary: #D32F2F;
+  --color-secondary-hover: #b71c1c;
+}
+
+@layer base {
+  body {
+    @apply antialiased text-gray-800 font-sans;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-heading font-bold;
+  }
+}
+
+@layer utilities {
+  .prose {
+    @apply text-gray-700 leading-relaxed;
+  }
+
+  .prose h1,
+  .prose h2,
+  .prose h3,
+  .prose h4 {
+    @apply font-heading font-black text-[#001253] mt-10 mb-4;
+  }
+
+  .prose h2 {
+    @apply text-3xl pb-2 border-b border-gray-100;
+  }
+
+  .prose h3 {
+    @apply text-2xl;
+  }
+
+  .prose ul {
+    @apply list-disc list-outside ml-6 space-y-2 mb-6;
+  }
+
+  .prose li {
+    @apply marker:text-secondary pl-2;
+  }
+
+  .prose strong {
+    @apply text-[#001253] font-bold;
+  }
+
+  .prose a {
+    @apply text-secondary no-underline font-bold transition-colors hover:text-[#001253];
+  }
+
+  .prose img {
+    @apply rounded-xl shadow-lg my-8 w-full block;
+  }
+
+  .prose blockquote {
+    @apply border-l-4 border-secondary pl-6 italic text-gray-600 bg-gray-50 py-4 pr-4 rounded-r-lg;
+  }
+}
