@@ -335,7 +335,7 @@ const PropertyDetails = () => {
                         {/* Overview */}
                         <section className="mb-12 bg-white p-8 rounded-2xl shadow-sm">
                             <h3 className="text-2xl font-bold text-primary mb-6 border-l-4 border-secondary pl-4">Project Overview</h3>
-                            <div className="text-gray-600 leading-relaxed space-y-4 prose max-w-none" dangerouslySetInnerHTML={{ __html: property.content }} />
+                            <div className="text-gray-600 leading-relaxed space-y-4 prose max-w-none" dangerouslySetInnerHTML={{ __html: property.description }} />
                         </section>
 
                         {/* Location Map Placeholder */}
