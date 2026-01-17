@@ -75,7 +75,7 @@ const Blog = () => {
                             const imageUrl = getLocalAsset(post.featured_image);
                             return (
                                 <div key={post.id} className="group cursor-pointer flex flex-col h-full bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300">
-                                    <Link to={`/blog/${post.slug}`} className="block relative overflow-hidden">
+                                    <Link to={`/${post.slug}`} className="block relative overflow-hidden">
                                         <div className="aspect-video relative overflow-hidden bg-gray-100">
                                             {imageUrl ? (
                                                 <img
@@ -98,7 +98,7 @@ const Blog = () => {
                                             <span className="flex items-center gap-2"><Calendar size={14} /> {new Date(post.date).toLocaleDateString()}</span>
                                             <span className="flex items-center gap-2"><User size={14} /> Admin</span>
                                         </div>
-                                        <Link to={`/blog/${post.slug}`} className="block mb-4">
+                                        <Link to={`/${post.slug}`} className="block mb-4">
                                             <h3 className="text-xl md:text-2xl font-bold text-[#001253] leading-tight group-hover:text-[#E30613] transition-colors line-clamp-2">
                                                 {post.title}
                                             </h3>
@@ -106,7 +106,7 @@ const Blog = () => {
                                         <p className="text-gray-500 text-sm line-clamp-3 mb-6 leading-relaxed flex-1">
                                             {post.seo?.metadesc || post.excerpt || "Learn more about the latest trends in the Bangladesh real estate market."}
                                         </p>
-                                        <Link to={`/blog/${post.slug}`} className="flex items-center gap-2 text-[#E30613] font-black text-xs uppercase tracking-widest group-hover:gap-4 transition-all mt-auto pt-4 border-t border-gray-100">
+                                        <Link to={`/${post.slug}`} className="flex items-center gap-2 text-[#E30613] font-black text-xs uppercase tracking-widest group-hover:gap-4 transition-all mt-auto pt-4 border-t border-gray-100">
                                             Read Article <ArrowRight size={16} />
                                         </Link>
                                     </div>

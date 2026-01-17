@@ -67,9 +67,10 @@ function App() {
           <Route path="/projects/:id" element={<PropertyDetails />} />
           <Route path="/landowners" element={<Landowners />} />
           <Route path="/blog" element={<Blog />} />
-          <Route path="/blog/:slug" element={<BlogPost />} />
           <Route path="/gallery" element={<Gallery />} />
           <Route path="/contact" element={<Contact />} />
+          {/* Catch-all for blog posts - must be last */}
+          <Route path="/:slug" element={<BlogPost />} />
         </Route>
       </Routes>
     </Router>

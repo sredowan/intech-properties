@@ -1,29 +1,31 @@
 export const getLocalAsset = (url) => {
     if (!url) return '';
-    if (url.startsWith('http') || url.startsWith('https')) return url;
     if (url.startsWith('blob:')) return url;
 
+    // Strip the /__nodejs_public prefix if present (legacy production artifact)
+    let cleanedUrl = url.replace('/__nodejs_public', '');
+
+    // If it's an external URL, return as-is
+    if (cleanedUrl.startsWith('http') || cleanedUrl.startsWith('https')) return cleanedUrl;
+
     // If it's an absolute path to src/assets (dev), keep it
-    if (url.startsWith('/src') || url.startsWith('/assets')) return url;
+    if (cleanedUrl.startsWith('/src') || cleanedUrl.startsWith('/assets')) return cleanedUrl;
 
     // Handle uploads
-    if (url.includes('/uploads/')) {
-        // If it's already absolute (from new PHP script or DB), return it
-        if (url.startsWith('http')) return url;
+    if (cleanedUrl.includes('/uploads/')) {
+        // Ensure it starts with /
+        const normalizedUrl = cleanedUrl.startsWith('/') ? cleanedUrl : `/${cleanedUrl}`;
 
-        // In development, force load from backend server (valid workaround if proxy isn't restarting)
+        // In development, force load from backend server
         if (import.meta.env.DEV) {
-            const cleanUrl = url.startsWith('/') ? url : `/${url}`;
-            return `http://localhost:3002${cleanUrl}`;
+            return `http://localhost:3002${normalizedUrl}`;
         }
 
-        // If it's already absolute (from new PHP script), return it
-        if (url.startsWith('/')) return url;
-        // If it's relative?
-        return url;
+        // In production, just return the normalized path
+        return normalizedUrl;
     }
 
     // Fallback for filename only inputs (legacy)
-    const filename = url.split('/').pop().split('?')[0];
+    const filename = cleanedUrl.split('/').pop().split('?')[0];
     return `/assets/images/${filename}`;
 };
